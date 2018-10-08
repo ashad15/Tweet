@@ -1,37 +1,71 @@
 var Twit=require('twit');
 var fs =require('fs');
 
+
 var config= require('./config');
 
 
 
 var t = new Twit(config);
 
-//get()
+trends();
 
-var params={id:'1',count:5}
+function trends(){
+  console.log("trend called")
+var params={id:'1',count:3}
+
+
 t.get('trends/place',params,function(err,data,res){
 
-  var topt=JSON.stringify(data, undefined, 2);
-oauthJsonFile = fs.createWriteStream('oauth.json');
-oauthJsonFile.write(data)
+    var topt=JSON.stringify(data, undefined, 2);
+
+WRITEFILE(topt)
+
+
+
+
+
+
+
 })
 
+}
+
+
+function WRITEFILE(topt){
+fs.writeFile("trend.json", topt, function(err) {
+    if(err) {
+        return console.log(err);
+    }
+
+
+    console.log("The file was saved!");
+
+});
+}
 
 
 
 
-/*  trending=topt.trends;
-    console.log(trending)
-  for(var b=0;b<trending.length;b++)
-  {
-    console.log(trending.name[b]);
-  }
-})*/
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 function posting(){
 var tweet={status:'#getting started again'};
 function tweeted(err,data2,res){
@@ -44,7 +78,7 @@ t.post('statuses/update',tweet,tweeted);
 
 
 function get(){
-t.get('search/tweets',{q:'aman',result_type:'popular',count:5},function(err,data1,res){
+t.get('search/tweets',{q:'#FelizLunes',result_type:'popular',count:5},function(err,data1,res){
   if(err){
     console.log('error')}
     else{
@@ -59,3 +93,4 @@ t.get('search/tweets',{q:'aman',result_type:'popular',count:5},function(err,data
 
 })
 }
+*/
