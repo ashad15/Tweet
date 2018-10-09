@@ -27,10 +27,12 @@ console.log(trending[0].trends[0]);
 console.log("/////////////////////// ")
 var array1=[]
 array1=top5()
-for (var k=0;k<5;k++)
+/*for (var k=0;k<5;k++)
 {
   get(trending[0].trends[array1[k]].name)
-}
+}*/
+
+get(trending[0].trends[array1[0]].name)
 
 
 
@@ -82,7 +84,7 @@ function posting()
 function get(query)
 {
 console.log(query)
-    t.get('search/tweets',{q:query,result_type:'popular',count:5},function(err,data1,res){
+    t.get('search/tweets',{q:query,result_type:'popular',count:3},function(err,data1,res){
       if(err){
         console.log('error');
       }
@@ -93,6 +95,10 @@ console.log(query)
         {
           console.log(nec[i].text)
           console.log(nec[i].created_at)
+          
+          console.log(nec[i].favourite)
+          console.log(nec[i].retweet_count)
+
         }
       }
     });
