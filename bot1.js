@@ -1,6 +1,6 @@
 const Twit=require('twit');
 const  fs =require('fs');
-
+const TwitDatabase = require('./util/Database').firebase.database();
 
 
 const config= require('./config');
@@ -40,8 +40,33 @@ get(trending[0].trends[array1[0]].name)
 
 
 //=============================================================================//
+//===========================Twit saving in database===========================//
+TwitDatabase.ref().update(trending);
+/*
+Store databse as json type like
+twit
+    /trends
+        /1
+        /2
+        /3
+
+query for this
+for each new entry
+  TwitDatabase.ref('twit/trends/').set({
+      "1":data
+  });
+
+Updating
+TwitDatabase.ref('twit/trends/').update({
+    "1":data
+});
+read
+TwitDatabase.ref().child('trends').orderByChild("number").on("value",(twit)=>{
+  twit.val()   :this will read all twit with given query
+})
 
 
+*/
 //------------------------------------------------------//
 function top5()
 {
