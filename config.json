@@ -1,0 +1,10 @@
+{
+  "firebase": {
+           "apiKey": "AIzaSyCzhlQ42jnQGHfixzNin4Ppw5fkPkc9QU0",
+            "authDomain": "bot1-2115f.firebaseapp.com",
+            "databaseURL": "https://bot1-2115f.firebaseio.com",
+            "projectId": "bot1-2115f",
+            "storageBucket": "bot1-2115f.appspot.com",
+            "messagingSenderId": "376578123409"
+  }
+}
