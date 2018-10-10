@@ -2,6 +2,7 @@ const Twit=require('twit');
 const  fs =require('fs');
 
 
+
 const config= require('./config');
 const t = new Twit(config);
 
@@ -95,7 +96,7 @@ console.log(query)
         {
           console.log(nec[i].text)
           console.log(nec[i].created_at)
-          
+
           console.log(nec[i].favourite)
           console.log(nec[i].retweet_count)
 
