@@ -1,0 +1,24 @@
+<html>
+<head>
+  <link rel="stylesheet" href="/css/index.css">
+</head>
+<body>
+  <div class="form-box">
+    <form action="/tweetRequest" method="post">
+            <input type="text" name="username" value="" placeholder="Username">
+            <input type="text" name="twit" value="" placeholder="Tweets">
+            <div class="radio">
+                <label for="text">Text</label>
+                <input type="radio" name="txt">
+                <label for="created_at">Create</label>
+                <input type="radio" name="created_at">
+                <label for="retweet_count">Retweets</label>
+                <input type="radio" name="retweet_count">
+                <label for="user_detail">User</label>
+                <input type="radio" name="user_detail">
+            </div>
+            <input type="submit" value="submit">
+    </form>
+  </div>
+</body>
+</html>
