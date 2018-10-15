@@ -1,3 +1,5 @@
+/*deprecated from here and use it in the api it is intended for*/
+
 var a= require('express');
 var bp=require('body-parser');
 const TwitDatabase = require('./util/Database').firebase.database();

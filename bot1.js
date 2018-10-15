@@ -1,3 +1,7 @@
+/*deprecated from here and use it in the api it is intended for*/
+
+
+
 const Twit=require('twit');
 const  fs =require('fs');
 const TwitDatabase = require('./util/Database').firebase.database();
