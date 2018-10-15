@@ -3,19 +3,44 @@ const  fs =require('fs');
 const TwitDatabase = require('./util/Database').firebase.database();
 
 
-const config= require('./config');
+const config= require('./config.js');
+console.log(config)
 const t = new Twit(config);
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //get()
+//-------------------------------------------//
+// code to get top trending topic and store in trends.json //
+var params={id:'1',count:5}
 
-var params={id:'1',count:3}
 t.get('trends/place',params,function(err,data,res){
+  console.log("2")
   var top_twit=JSON.stringify(data, undefined, 2);
+console.log(top_twit)
+
   twit_stream = fs.createWriteStream('trends.json');
-  twit_stream.write(top_twit);
+  twit_stream.write(top_twit,'utf8');
 });
-
-
+//---------------------------------------------------//
 
 
 /*=============================================================================/
@@ -25,49 +50,19 @@ console.log("calling trending")
 console.log(trending[0].trends[0]);
 
 
-console.log("/////////////////////// ")
+
 var array1=[]
 array1=top5()
-/*for (var k=0;k<5;k++)
-{
-  get(trending[0].trends[array1[k]].name)
-}*/
+
+
+
 
 get(trending[0].trends[array1[0]].name)
 
 
 
-
-
-//=============================================================================//
-//===========================Twit saving in database===========================//
-TwitDatabase.ref().update(trending);
-/*
-Store databse as json type like
-twit
-    /trends
-        /1
-        /2
-        /3
-
-query for this
-for each new entry
-  TwitDatabase.ref('twit/trends/').set({
-      "1":data
-  });
-
-Updating
-TwitDatabase.ref('twit/trends/').update({
-    "1":data
-});
-read
-TwitDatabase.ref().child('trends').orderByChild("number").on("value",(twit)=>{
-  twit.val()   :this will read all twit with given query
-})
-
-
-*/
 //------------------------------------------------------//
+// fn to get top 5 trending topic //
 function top5()
 {
   var array = [];
@@ -95,38 +90,44 @@ return array;
 }
 //------------------------------------------------------//
 
-function posting()
-{
-  var tweet={status:'#getting started again'};
-  function tweeted(err,data2,res)
-  {
-    console.log(data2);
-  }
-  t.post('statuses/update',tweet,tweeted);
-}
 
-
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^//
+//fn to get tweets with metedata and store in DB //
 
 function get(query)
 {
+  const db1=[];
 console.log(query)
-    t.get('search/tweets',{q:query,result_type:'popular',count:3},function(err,data1,res){
+    t.get('search/tweets',{q:query,result_type:'popular',count:10},function(err,data1,res){
       if(err){
         console.log('error');
       }
       else
       {
         var nec=data1.statuses;
+        console.log('********')
+        console.log(nec.length)
         for (var i=0;i<nec.length;i++)
         {
-          console.log(nec[i].text)
-          console.log(nec[i].created_at)
+          try{
+          var db=[];
 
-          console.log(nec[i].favourite)
-          console.log(nec[i].retweet_count)
 
-        }
+          db.push(nec[i].text)
+
+          db.push(nec[i].created_at)
+
+          db.push(nec[i].favourite)
+         db.push(nec[i].retweet_count);
+          db1.push(db);
+          }
+        catch (exception ){}
+}
+
+        TwitDatabase.ref('data').set(db1);
+        //return db1;
       }
     });
-    console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+
 }
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^//
