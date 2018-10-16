@@ -8,62 +8,47 @@ const TwitDatabase = require('./util/Database').firebase.database();
 
 
 const config= require('./config.js');
-console.log(config)
+
 const t = new Twit(config);
 
+//main code//
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//get()
-//-------------------------------------------//
-// code to get top trending topic and store in trends.json //
-var params={id:'1',count:5}
-
-t.get('trends/place',params,function(err,data,res){
-  console.log("2")
-  var top_twit=JSON.stringify(data, undefined, 2);
-console.log(top_twit)
-
-  twit_stream = fs.createWriteStream('trends.json');
-  twit_stream.write(top_twit,'utf8');
-});
-//---------------------------------------------------//
-
-
-/*=============================================================================/
-/*-------------------------Twits Check-----------------------------------------*/
+WritingTrend();
 trending = require('./trends.json');
-console.log("calling trending")
-console.log(trending[0].trends[0]);
-
-
-
 var array1=[]
 array1=top5()
-
-
-
-
 get(trending[0].trends[array1[0]].name)
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+//-------------------------------------------//
+// code to get top trending topic and store in trends.json //
+function WritingTrend(){
+var params={id:'1',count:5}
+
+t.get('trends/place',params,function(err,data,res){
+
+  var top_twit=JSON.stringify(data, undefined, 2);
+
+
+  twit_stream = fs.createWriteStream('trends.json');
+  twit_stream.write(top_twit,'utf8');
+});}
+//---------------------------------------------------//
 
 //------------------------------------------------------//
 // fn to get top 5 trending topic //
@@ -102,7 +87,7 @@ function get(query)
 {
   const db1=[];
 console.log(query)
-    t.get('search/tweets',{q:query,result_type:'popular',count:10},function(err,data1,res){
+    t.get('search/tweets',{q:query,result_type:'popular',count:20},function(err,data1,res){
       if(err){
         console.log('error');
       }
@@ -113,24 +98,29 @@ console.log(query)
         console.log(nec.length)
         for (var i=0;i<nec.length;i++)
         {
-          try{
+
           var db=[];
 
 
           db.push(nec[i].text)
 
           db.push(nec[i].created_at)
-
-          db.push(nec[i].favourite)
-         db.push(nec[i].retweet_count);
-          db1.push(db);
+          if((nec[i].favourite)==null){
+            db.push("null")
           }
-        catch (exception ){}
-}
+          else{db.push(nec[i].favourite
+          )}
+         if((nec[i].retweet_count)==null){
+           db.push("null");
+         }
+         else{db.push(nec[i].retweet_count);}
+         db.push(nec[i].user)
+          db1.push(db);
 
+}
         TwitDatabase.ref('data').set(db1);
         //return db1;
-      }
+    }
     });
 
 }
