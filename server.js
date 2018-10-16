@@ -18,7 +18,24 @@ app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'app')));
 
 //=========================================================//
+/*
+Traffic triggering routes for getting data from twit server
+at specific points.
+*/
 
+
+
+
+
+
+
+
+
+
+
+
+
+//=========================Routes===========================//
 app.get('/',(req,res)=>{
   res.render('home');
 });
@@ -41,4 +58,4 @@ app.post('/tweetRequest',(req,res)=>{
         })
       }
     })
-})
+});
