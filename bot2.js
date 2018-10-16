@@ -1,32 +1,57 @@
-var a= require('express');
-var bp=require('body-parser');
+const express = require('express');
+const bodyParser = require('body-parser');
 const TwitDatabase = require('./util/Database').firebase.database();
-var fs=require('fs')
-var csvWriter = require('csv-write-stream')
-var writer = csvWriter();
+const fs = require('fs')
+const csvWriter = require('csv-write-stream')
 
-var writer = csvWriter({ headers: ["TEXT", "Created_at","Favourite","Retweet_Count","User_Detail"]})
-writer.pipe(fs.createWriteStream('data.csv'))
+
+const writer = csvWriter({ headers: ["TEXT", "Created_at","Favourite","Retweet_Count","User_Detail"]})
+
 
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 // part to get query data from html file//
 
-var exp=a();
-var ur=bp.urlencoded({ extended: false });
+writer.pipe(fs.createWriteStream('data.csv'));
+const write = csvWriter();
+
+const exp = express();
+const ur = bodyParser.urlencoded({ extended: false });
+
 exp.set('view engine','ejs');
-var query=[];
+
+
+
+
+
+//======================ROUTES==========================//
 exp.post('/',ur,function(req,res)
 {
-  query =req.body;
+  query = req.body;
   console.log(query.us)
-  CSVFILE();
-})
+  CSVFILE({
+    "username":req.body.username,
+    "twit":req.body.twit,
+    "text":req.body.txt,
+    "createAt":req.body.created_at,
+    //write here whats coming in as req body,I left for more
+  }).then((response)=>{
+    if(response.status){
+      console.log('CSV Written');
+    }
+    else
+    {
+      console.log('ERROR');
+    }
+  });
+});
 exp.get('/',function(req,res)
 {
   res.render('home.ejs');
 })
-exp.listen('400','192.168.43.34');
+exp.listen(3000,() => {
+  console.log('Bot2 listening at 3000');
+});
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
@@ -72,114 +97,109 @@ exp.listen('400','192.168.43.34');
 //_________________________________________________________//
 // code to retrieve data from DB and store in csv file//
 
-function CSVFILE(){
-  var data2=[];
-  console.log("Inside csv")
-for (var k=0;k<2;k++)
-{
-  var temp=[]
-if (query.r1=='on')
-{
+function CSVFILE(params){
+  let username = params.username;
+  let twit = params.twit;
+  let createdAt = params.createdAt;
+  let retweetCount = params.retweetCount;
+  let userDetail = params.userDetail;
+
+  return new Promise((resolve,reject)=>{
+              var data2=[];
+              console.log("Inside csv")
+              for (var k=0;k<2;k++)
+              {
+                  var temp=[]
+                  if (query.r1=='on')
+                  {
+                    TwitDatabase.ref('data').child(k+'/0').on('value', function(res) {
+                    if(res.val())
+                    {
+                       console.log("r1")
+                       temp.push(res.val());
+
+                    }
+                    });
+                  }
+                  else {
+                    console.log("Else or r1");
+                    temp.push('-')
+                  }
 
 
-TwitDatabase.ref('data').child(k+'/0').on('value', function(res) {
-  if(res.val())
-  {
-    console.log("r1")
+                  if (query.r2=='on')
+                  {
+                  TwitDatabase.ref('data').child(k+'/1').on('value', function(res) {
+                  if(res.val())
+                  {
+                      temp.push(res.val());
+                  }
+                  });
+                  }
+                  else {
+                      console.log("Else or r2")
+                      temp.push('-')
+                  }
 
 
-    temp.push(res.val());
+                  if (query.r3=='on')
+                  {
+                  TwitDatabase.ref('data').child(k+'/2').on('value', function(res) {
+                  if(res.val())
+                  {
+                    temp.push(res.val());
+                  }
+                  });
+                  }
 
-  }
-});
-}
-else {
-  console.log("Else or r1");
-  temp.push('-')
-}
-
-if (query.r2=='on')
-{
-
-
-TwitDatabase.ref('data').child(k+'/1').on('value', function(res) {
-  if(res.val())
-  {
-
-    temp.push(res.val());
-  }
-});
-}
-else {
-  console.log("Else or r2")
-  temp.push('-')
-}
+                  else {
+                    temp.push('-')
+                  }
 
 
+                  if (query.r4=='on')
+                  {
 
 
-if (query.r3=='on')
-{
+                  TwitDatabase.ref('data').child(k+'/3').on('value', function(res) {
+                    if(res.val())
+                    {
 
+                      temp.push(res.val());
 
-TwitDatabase.ref('data').child(k+'/2').on('value', function(res) {
-  if(res.val())
-  {
-    temp.push(res.val());
-  }
-});
-}
-
-else {
-  temp.push('-')
-}
-
-
-if (query.r4=='on')
-{
-
-
-TwitDatabase.ref('data').child(k+'/3').on('value', function(res) {
-  if(res.val())
-  {
-
-    temp.push(res.val());
-
-  }
-});
-}
-else {
-  temp.push('-')
-}
+                    }
+                  });
+                  }
+                  else {
+                    temp.push('-')
+                  }
 
 
 
-if (query.r5=='on')
-{
+                  if (query.r5=='on')
+                  {
 
 
-TwitDatabase.ref('data').child(k+'/4').on('value', function(res) {
-  if(res.val())
-  {
+                  TwitDatabase.ref('data').child(k+'/4').on('value', function(res) {
+                    if(res.val())
+                    {
 
-    temp.push(res.val());
+                      temp.push(res.val());
 
-  }
-});
-}
-else {
-  temp.push('-')
-}
+                    }
+                  });
+                  }
+                  else {
+                    temp.push('-')
+                  }
+                  console.log(temp);
+                  writer.write(temp);
+                  }
+                  resolve({
+                    "status":true
+                  });
+  });
 
-
-
-console.log(temp)
-
-
-writer.write(temp)
-
-
-}
 
 }
 //____________________________________________________________//

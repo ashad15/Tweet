@@ -1,6 +1,10 @@
 //API1
 //Worker to get request from api2 which is send through request in form using POST,
 //which is received at server.js file and transferred to this worker for process and returning the response
+const TwitDatabase = require('./Database').firebase.database();
+const fs = require('fs')
+const csvWriter = require('csv-write-stream');
+
 
 exports.ReceiveTweet = (params) => {
       let username = params.username;
